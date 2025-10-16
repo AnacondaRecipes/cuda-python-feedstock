@@ -142,7 +142,6 @@ outputs:
         - cythonize -i -3 test_cimport.pyx
         - python -c "import test_cimport; test_cimport.test()"
         - python -c "import cuda.bindings; print(cuda.bindings.__version__)"
-        - python -c "import cuda; print(cuda.__version__)"  # TODO: Remove this
       imports:
         - cuda
         - cuda.cuda
@@ -173,8 +172,7 @@ outputs:
         - python
         - cuda-version >=11.2,<13
         - numpy
-        # TODO: replace by cuda-bindings once it's ready
-        - cuda-python
+        - cuda-bindings
     test:
       commands:
         - python -c "from cuda.core.experimental import Device"
