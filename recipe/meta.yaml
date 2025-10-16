@@ -48,8 +48,6 @@ outputs:
 
   - name: cuda-python
     version: {{ bindings_ver }}
-    script: build_output.sh   # [linux]
-    script: build_output.bat  # [win]
     build:
       noarch: python
       number: {{ number|int + 1 }}
@@ -60,16 +58,16 @@ outputs:
       {% endif %}
     requirements:
       host:
-        - python {{ python_min }}.*
+        - python
         - pip
         - setuptools
       run:
-        - python >={{ python_min }}
+        - python
         - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
         - cuda-version >=12.0,<13.0a0
     test:
       requires:
-        - python >={{ python_min }}
+        - python
       imports:
         - cuda.bindings
         - cuda.bindings.driver
@@ -91,8 +89,6 @@ outputs:
 
   - name: cuda-bindings
     version: {{ bindings_ver }}
-    script: build_output.sh   # [linux]
-    script: build_output.bat  # [win]
     build:
       number: {{ number }}
       # cuda.bindings needs to be built with the matching major.minor headers
@@ -184,8 +180,6 @@ outputs:
 
   - name: cuda-core
     version: {{ core_ver }}
-    script: build_output.sh   # [linux]
-    script: build_output.bat  # [win]
     build:
       number: {{ number }}
       # While building cuda-core does not require CUDA/NVCC, we use the same skip condition here
