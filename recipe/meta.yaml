@@ -32,7 +32,6 @@ source:
 build:
   number: 0
   skip: true  # [py < 39 or osx]
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 # Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:
@@ -50,6 +49,9 @@ requirements:
 outputs:
   - name: cuda-python
     version: {{ bindings_ver }}
+    # cuda-python repository has multiple Python packages
+    script: build_output.sh   # [linux]
+    script: build_output.bat  # [win]
     requirements:
       host:
         - python
@@ -73,8 +75,14 @@ outputs:
 
   - name: cuda-bindings
     version: {{ bindings_ver }}
+    # cuda-python repository has multiple Python packages
+    script: build_output.sh   # [linux]
+    script: build_output.bat  # [win]
     build:
       number: {{ number }}
+      script_env:
+        # Ensure that CUDA includes can be found by the host compiler
+        - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
       run_exports:
         - {{ pin_subpackage('cuda-python', min_pin='x', max_pin='x') }}
       ignore_run_exports_from:
@@ -144,6 +152,9 @@ outputs:
 
   - name: cuda-core
     version: {{ core_ver }}
+    # cuda-python repository has multiple Python packages
+    script: build_output.sh   # [linux]
+    script: build_output.bat  # [win]
     build:
       number: {{ number }}
       # While building cuda-core does not require CUDA/NVCC, we use the same skip condition here
