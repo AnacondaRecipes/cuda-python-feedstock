@@ -1,44 +1,45 @@
 {% set name = "cuda-python" %}
+{% set number = 0 %}
+# cuda-python version is in sync with cuda-bindings version
+{% set version = "12.8.0" %}
+# cuda-python keeps cuda-core version separate from cuda-bindings
+{% set core_version = "0.1.1" %}
+# Git tag should be in sync with cuda-python version.
+# However, there might be exceptions for the included cuda-python modules.
+# Please refer to "cuda-core-v*" tags
+{% set git_tag = "v" ~ version %}
+# Options to build cuda-python modules
+{% set build_bindings = True %}
+{% set build_core = False %}
 
-{% set git_tag = environ.get("git_tag") %}
-{% set core_version = environ.get("core_version", "0.0.0") %}
-{% set bindings_version = environ.get("bindings_version", "0.0.0") %}
-{% set build_bindings = environ.get("build_bindings", False) %}
-{% set build_core = environ.get("build_core", False) %}
-
-{% set core_major_version = core_version.split(".")[0]|int %}
-{% set core_minor_version = core_version.split(".")[1]|int %}
-{% set core_patch_version = core_version.split(".")[2]|int %}
-{% set core_ver = core_major_version ~ "." ~ core_minor_version ~ "." ~ core_patch_version %}
-{% set bindings_major_version = bindings_version.split(".")[0]|int %}
-{% set bindings_minor_version = bindings_version.split(".")[1]|int %}
-{% set bindings_patch_version = bindings_version.split(".")[2]|int %}
-{% set bindings_ver = bindings_major_version ~ "." ~ bindings_minor_version ~ "." ~ bindings_patch_version %}
+{% set bindings_major_version = version.split(".")[0]|int %}
+{% set bindings_minor_version = version.split(".")[1]|int %}
+{% set bindings_patch_version = version.split(".")[2]|int %}
 {% set target_name = "x86_64-linux" %}  # [linux64]
 {% set target_name = "sbsa-linux" %}  # [aarch64]
 {% set target_name = "x64" %}  # [win64]
 {% set subdir = "" %}
 {% set subdir = os.sep.join(["", "targets", target_name]) %}  # [linux64 or aarch64]
-{% set subdir = os.sep.join(["", "Library"]) %}               # [win64]
+{% set subdir = os.sep.join(["", "Library"]) %}  # [win64]
 
 package:
   name: {{ name }}-split
-  version: 1
+  version: {{ version }}
 
 source:
   url: https://github.com/NVIDIA/cuda-python/releases/download/{{ git_tag }}/cuda-python-{{ git_tag }}.tar.gz
   sha256: 6cc8db1e65a1f995e289b64f9b9bff4362321d36ecf9b54eb192d0781475fbca
 
 build:
-  number: 0
+  number: {{ number }}
   skip: true  # [py < 39 or osx]
 
 requirements:
   build:
-    - {{ compiler('c') }}
-    - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
-    - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
+    - {{ compiler('c') }}
+    - {{ compiler('cuda') }}
+    - {{ compiler('cxx') }}
   host:
     - python
     - pip
@@ -46,8 +47,9 @@ requirements:
     - cython
 
 outputs:
-  - name: cuda-python
-    version: {{ bindings_ver }}
+  # cuda-python is a metapackage
+  - name: {{ name }}
+    version: {{ version }}
     # cuda-python repository has multiple Python packages
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
@@ -59,7 +61,7 @@ outputs:
       run:
         - python
         - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
-        - cuda-version >=12.0,<13.0a0
+        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
     test:
       requires:
         - python
@@ -73,11 +75,13 @@ outputs:
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
 
   - name: cuda-bindings
-    version: {{ bindings_ver }}
+    version: {{ version }}
     # cuda-python repository has multiple Python packages
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
+      number: {{ number }}
+      skip: true  # [not build_bindings]
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
@@ -92,26 +96,23 @@ outputs:
         - cuda-nvrtc-dev
     requirements:
       build:
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - {{ stdlib('c') }}
-        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-        - python                              # [build_platform != target_platform]
-        - cython                              # [build_platform != target_platform]
         - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
       host:
+        - python
+        - pip
+        - setuptools
+        - cython
+        - pyclibrary
         - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
         - cuda-cudart-dev
         - cuda-cudart
         - cuda-nvrtc-dev
         - cuda-nvrtc
         - cuda-profiler-api
-        - cython
-        - pip
-        - pyclibrary
-        - python
-        - setuptools
       run:
         - python
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
@@ -148,29 +149,27 @@ outputs:
         - cuda.cudart
 
   - name: cuda-core
-    version: {{ core_ver }}
+    version: {{ core_version }}
     # cuda-python repository has multiple Python packages
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
+      number: {{ number }}
       skip: true  # [not build_core]
     requirements:
       build:
+        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - {{ stdlib('c') }}
-        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-        - python                              # [build_platform != target_platform]
-        - cython                              # [build_platform != target_platform]
       host:
-        - cython
-        - pip
         - python
+        - pip
         - setuptools
+        - cython
       run:
         - python
-        - cuda-version >=11.2,<13
+        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
         - numpy
         - cuda-bindings
     test:
