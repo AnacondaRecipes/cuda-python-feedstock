@@ -8,9 +8,6 @@
 # However, there might be exceptions for the included cuda-python modules.
 # Please refer to "cuda-core-v*" tags
 {% set git_tag = "v" ~ version %}
-# Options to build cuda-python modules
-{% set build_bindings = True %}
-{% set build_core = False %}
 
 {% set bindings_major_version = version.split(".")[0]|int %}
 {% set bindings_minor_version = version.split(".")[1]|int %}
@@ -53,6 +50,8 @@ outputs:
     # cuda-python repository has multiple Python packages
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
+    build:
+      number: {{ number }}
     requirements:
       host:
         - python
@@ -60,11 +59,12 @@ outputs:
         - setuptools
       run:
         - python
-        - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
+        - {{ pin_subpackage('cuda-bindings', exact=True) }}
         - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
     test:
       requires:
         - python
+        - {{ pin_subpackage('cuda-bindings', exact=True) }}
       imports:
         - cuda.bindings
         - cuda.bindings.driver
@@ -81,12 +81,11 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      skip: true  # [not build_bindings]
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
       run_exports:
-        - {{ pin_subpackage('cuda-python', min_pin='x', max_pin='x') }}
+        - {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
       ignore_run_exports_from:
         - {{ compiler('cuda') }}
         # The run-exports from these dev packages are too tight, so we ignore them.
@@ -155,7 +154,8 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      skip: true  # [not build_core]
+      run_exports:
+        - {{ pin_subpackage('cuda-core', min_pin='x', max_pin='x') }}
     requirements:
       build:
         - {{ stdlib('c') }}
@@ -167,11 +167,12 @@ outputs:
         - pip
         - setuptools
         - cython
+        - {{ pin_subpackage('cuda-bindings', exact=True) }}
       run:
         - python
-        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
         - numpy
-        - cuda-bindings
+        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
+        - {{ pin_subpackage('cuda-bindings', exact=True) }}
     test:
       commands:
         - python -c "from cuda.core.experimental import Device"
@@ -179,7 +180,7 @@ outputs:
 
 about:
   home: https://nvidia.github.io/cuda-python/
-  license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+  license: Other/Proprietary License
   license_file: LICENSE
   license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
   summary: CUDA Python
