@@ -55,6 +55,10 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
+      ignore_prefix_files:
+        - '**/*.c'
+        - '**/*.cpp'
+        - '**/*.so.c'
     requirements:
       host:
         - python
@@ -97,6 +101,10 @@ outputs:
         # use of dlopen, so it is compatible with other CUDA minor versions.
         - cuda-cudart-dev
         - cuda-nvrtc-dev
+      ignore_prefix_files:
+        - '**/*.c'
+        - '**/*.cpp'
+        - '**/*.so.c'
     requirements:
       build:
         - {{ stdlib('c') }}
@@ -168,6 +176,10 @@ outputs:
       skip: {{not build_core}}
       run_exports:
         - {{ pin_subpackage('cuda-core', min_pin='x.x', max_pin='x.x') }}
+      ignore_prefix_files:
+        - '**/*.c'
+        - '**/*.cpp'
+        - '**/*.so.c'
     requirements:
       build:
         - {{ stdlib('c') }}
