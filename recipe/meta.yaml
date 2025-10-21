@@ -180,7 +180,7 @@ outputs:
 
 about:
   home: https://nvidia.github.io/cuda-python/
-  license: Other/Proprietary License
+  license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
   license_file: LICENSE
   license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
   summary: CUDA Python
