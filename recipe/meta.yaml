@@ -205,8 +205,6 @@ outputs:
         - python -c "from cuda.core.experimental import utils"
       imports:
         - cuda.core.experimental
-        - cuda.core.experimental.Device
-        - cuda.core.experimental.utils
 
 about:
   home: https://nvidia.github.io/cuda-python/
