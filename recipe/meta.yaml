@@ -60,7 +60,7 @@ outputs:
       run:
         - python
         - {{ pin_subpackage('cuda-bindings', exact=True) }}
-        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
+        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
     test:
       requires:
         - python
@@ -85,7 +85,7 @@ outputs:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
       run_exports:
-        - {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
+        - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
       ignore_run_exports_from:
         - {{ compiler('cuda') }}
         # The run-exports from these dev packages are too tight, so we ignore them.
@@ -99,14 +99,14 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
+        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
       host:
         - python
         - pip
         - setuptools
         - cython
         - pyclibrary
-        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
+        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
         - cuda-cudart-dev
         - cuda-cudart
         - cuda-nvrtc-dev
@@ -114,7 +114,7 @@ outputs:
         - cuda-profiler-api
       run:
         - python
-        - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
+        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
         # cuda-python requires cuda-nvrtc from the same major version. We ignored
         # run-exports of cuda-nvrtc-dev and instead allow a looser pinning here.
         - {{ pin_compatible('cuda-nvrtc', min_pin='x', max_pin='x') }}
@@ -155,7 +155,7 @@ outputs:
     build:
       number: {{ number }}
       run_exports:
-        - {{ pin_subpackage('cuda-core', min_pin='x', max_pin='x') }}
+        - {{ pin_subpackage('cuda-core', min_pin='x.x', max_pin='x.x') }}
     requirements:
       build:
         - {{ stdlib('c') }}
@@ -171,7 +171,7 @@ outputs:
       run:
         - python
         - numpy
-        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
+        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
         - {{ pin_subpackage('cuda-bindings', exact=True) }}
     test:
       commands:
