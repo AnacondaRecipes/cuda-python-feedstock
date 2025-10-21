@@ -32,7 +32,8 @@ source:
 
 build:
   number: {{ number }}
-  skip: true  # [py < 310 or osx]
+  # TODO: Temporarily skip 'aarch64' due to PBP error: virtual memory exhausted: Cannot allocate memory
+  skip: true  # [py < 310 or osx or aarch64]
 
 requirements:
   build:
