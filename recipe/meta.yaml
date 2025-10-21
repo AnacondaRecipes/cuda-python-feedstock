@@ -191,12 +191,15 @@ outputs:
       commands:
         - python -c "from cuda.core.experimental import Device"
         - python -c "from cuda.core.experimental import utils"
+      imports:
+        - cuda.core.experimental
+        - cuda.core.experimental.Device
+        - cuda.core.experimental.utils
 
 about:
   home: https://nvidia.github.io/cuda-python/
   license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
   license_file: LICENSE
-  license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
   summary: CUDA Python
   description: |
     CUDA Python is the home for accessing NVIDIA's CUDA platform from Python.
