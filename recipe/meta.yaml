@@ -11,9 +11,6 @@
 # Ex: "cuda-core-v*" tags on the upstream repository.
 {% set git_tag = "v" ~ version %}
 
-{% set bindings_major_version = version.split(".")[0]|int %}
-{% set bindings_minor_version = version.split(".")[1]|int %}
-{% set bindings_patch_version = version.split(".")[2]|int %}
 {% set target_name = "x86_64-linux" %}  # [linux64]
 {% set target_name = "sbsa-linux" %}  # [aarch64]
 {% set target_name = "x64" %}  # [win64]
