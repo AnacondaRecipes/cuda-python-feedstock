@@ -38,8 +38,8 @@ requirements:
   build:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
-    - {{ compiler('cuda') }}
     - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}
   host:
     - python
     - pip
@@ -130,18 +130,20 @@ outputs:
         # version with cuda.cudart.getLocalRuntimeVersion(). We ignored run-exports
         # of cuda-cudart-dev and instead allow a looser pinning here.
         - {{ pin_compatible('cuda-cudart', min_pin='x', max_pin='x') }}
+        # cuda-bindings and cuda-python versions should be kept in sync
         - {{ pin_subpackage('cuda-python', max_pin='x.x') }}
     test:
       requires:
-        - cuda-nvcc
-        - cuda-nvrtc-dev
-        - cuda-profiler-api
-        - cython
+        - python
         - setuptools
-        # Required by 'cythonize'
+        - cython
+        # Required due to 'cythonize' in the test commands
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
+        - {{ compiler('cuda') }}
+        - cuda-nvrtc-dev
+        - cuda-profiler-api
       files:
         - test_cimport.pyx
       commands:
@@ -184,6 +186,8 @@ outputs:
         - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
         - {{ pin_subpackage('cuda-bindings', exact=True) }}
     test:
+      requires:
+        - python
       commands:
         - python -c "from cuda.core.experimental import Device"
         - python -c "from cuda.core.experimental import utils"
