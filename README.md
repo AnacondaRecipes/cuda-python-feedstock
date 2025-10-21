@@ -9,7 +9,7 @@ About cuda-python
 
 Home: https://nvidia.github.io/cuda-python/
 
-Package license: [LicenseRef-NVIDIA-SOFTWARE-LICENSE](https://github.com/NVIDIA/cuda-python/blob/main/LICENSE)
+Package license: [LicenseRef-NVIDIA-SOFTWARE-LICENSE](https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md)
 
 Summary: CUDA Python
 
@@ -25,7 +25,7 @@ About cuda-bindings
 
 Home: https://nvidia.github.io/cuda-python/cuda-bindings
 
-Package license: [LicenseRef-NVIDIA-SOFTWARE-LICENSE](https://github.com/NVIDIA/cuda-python/blob/main/LICENSE)
+Package license: [LicenseRef-NVIDIA-SOFTWARE-LICENSE](https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md)
 
 Summary: CUDA Python Low-level Bindings
 
@@ -42,7 +42,7 @@ About cuda-python
 
 Home: https://nvidia.github.io/cuda-python/
 
-Package license: [LicenseRef-NVIDIA-SOFTWARE-LICENSE](https://github.com/NVIDIA/cuda-python/blob/main/LICENSE)
+Package license: [LicenseRef-NVIDIA-SOFTWARE-LICENSE](https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md)
 
 Summary: CUDA Python
 
@@ -58,7 +58,7 @@ Current build status
 
 
 <table>
-    
+
   <tr>
     <td>Azure</td>
     <td>
