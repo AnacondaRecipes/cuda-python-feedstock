@@ -50,7 +50,7 @@ outputs:
   # cuda-python is a metapackage
   - name: {{ name }}
     version: {{ version }}
-    # cuda-python repository has multiple Python packages
+    # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
@@ -79,7 +79,7 @@ outputs:
 
   - name: cuda-bindings
     version: {{ version }}
-    # cuda-python repository has multiple Python packages
+    # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
@@ -160,7 +160,7 @@ outputs:
   # cuda-core is a module provided by the cuda-python repository
   - name: cuda-core
     version: {{ core_version }}
-    # cuda-python repository has multiple Python packages
+    # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
