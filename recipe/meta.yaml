@@ -117,13 +117,13 @@ outputs:
         - pip
         - setuptools
         - cython
-        - pyclibrary
+        - pyclibrary 0.3.0
         - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
-        - cuda-cudart-dev
-        - cuda-cudart
-        - cuda-nvrtc-dev
-        - cuda-nvrtc
-        - cuda-profiler-api
+        - {{ pin_compatible('cuda-cudart-dev', min_pin='x.x', max_pin='x.x') }}
+        - {{ pin_compatible('cuda-cudart', min_pin='x.x', max_pin='x.x') }}
+        - {{ pin_compatible('cuda-nvrtc-dev', min_pin='x.x', max_pin='x.x') }}
+        - {{ pin_compatible('cuda-nvrtc', min_pin='x.x', max_pin='x.x') }}
+        - {{ pin_compatible('cuda-profiler-api', min_pin='x.x', max_pin='x.x') }}
       run:
         - python
         - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
