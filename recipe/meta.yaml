@@ -11,6 +11,10 @@
 # Ex: "cuda-core-v*" tags on the upstream repository.
 {% set git_tag = "v" ~ version %}
 
+# Enable building of the modules included in the upstream repository
+{% set build_bindings = True %}
+{% set build_core = True %}
+
 {% set target_name = "x86_64-linux" %}  # [linux64]
 {% set target_name = "sbsa-linux" %}  # [aarch64]
 {% set target_name = "x64" %}  # [win64]
@@ -80,6 +84,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
+      skip: {{not build_bindings}}
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
@@ -158,6 +163,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
+      skip: {{not build_core}}
       run_exports:
         - {{ pin_subpackage('cuda-core', min_pin='x.x', max_pin='x.x') }}
     requirements:
