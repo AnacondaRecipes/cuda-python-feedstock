@@ -1,12 +1,14 @@
 {% set name = "cuda-python" %}
 {% set number = 0 %}
+
 # cuda-python version is in sync with cuda-bindings version
 {% set version = "12.8.0" %}
-# cuda-python keeps cuda-core version separate from cuda-bindings
+# cuda-python keeps different versioning scheme for the included modules
 {% set core_version = "0.1.1" %}
+
 # Git tag should be in sync with cuda-python version.
 # However, there might be exceptions for the included cuda-python modules.
-# Please refer to "cuda-core-v*" tags
+# Ex: "cuda-core-v*" tags on the upstream repository.
 {% set git_tag = "v" ~ version %}
 
 {% set bindings_major_version = version.split(".")[0]|int %}
@@ -151,6 +153,7 @@ outputs:
         - cuda.cuda
         - cuda.cudart
 
+  # cuda-core is a module provided by the cuda-python repository
   - name: cuda-core
     version: {{ core_version }}
     # cuda-python repository has multiple Python packages
