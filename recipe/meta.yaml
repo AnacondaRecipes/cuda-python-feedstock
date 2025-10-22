@@ -84,6 +84,7 @@ outputs:
     about:
       home: https://nvidia.github.io/cuda-python/
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      license_file: cuda_python/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_python/LICENSE
       summary: CUDA Python
       description: |
@@ -177,6 +178,7 @@ outputs:
     about:
       home: https://nvidia.github.io/cuda-python/cuda-bindings
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      license_file: cuda_bindings/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_bindings/LICENSE
       summary: Low-level Python bindings for CUDA
       description: |
@@ -227,6 +229,7 @@ outputs:
     about:
       home: https://nvidia.github.io/cuda-python/cuda-core
       license: Apache-2.0
+      license_file: cuda_core/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_core/LICENSE
       summary: Pythonic access to CUDA core functionality (experimental)
       description: |
