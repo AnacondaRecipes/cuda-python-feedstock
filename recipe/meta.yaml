@@ -42,9 +42,6 @@ requirements:
     - {{ compiler('cuda') }}
   host:
     - python
-    - pip
-    - setuptools
-    - cython
 
 outputs:
   # cuda-python is a metapackage
@@ -55,10 +52,6 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      ignore_prefix_files:
-        - '**/*.c'
-        - '**/*.cpp'
-        - '**/*.so.c'
     requirements:
       host:
         - python
