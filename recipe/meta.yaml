@@ -81,6 +81,16 @@ outputs:
         - cuda.bindings.nvjitlink
       commands:
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
+    about:
+      home: https://nvidia.github.io/cuda-python/
+      license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      license_file: cuda_python/LICENSE
+      license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_python/LICENSE
+      summary: CUDA Python
+      description: |
+        CUDA Python is the home for accessing NVIDIA's CUDA platform from Python
+      doc_url: https://nvidia.github.io/cuda-python/
+      dev_url: https://github.com/NVIDIA/cuda-python
 
   - name: cuda-bindings
     version: {{ version }}
@@ -165,8 +175,18 @@ outputs:
         - cuda
         - cuda.cuda
         - cuda.cudart
+    about:
+      home: https://nvidia.github.io/cuda-python/cuda-bindings
+      license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      license_file: cuda_bindings/LICENSE
+      license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_bindings/LICENSE
+      summary: Low-level Python bindings for CUDA
+      description: |
+        cuda.bindings is a standard set of low-level interfaces,
+        providing full coverage of and access to the CUDA host APIs from Python.
+      doc_url: https://nvidia.github.io/cuda-python/cuda-bindings
+      dev_url: https://github.com/NVIDIA/cuda-python
 
-  # cuda-core is a module provided by the cuda-python repository
   - name: cuda-core
     version: {{ core_version }}
     # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
@@ -206,11 +226,22 @@ outputs:
         - python -c "from cuda.core.experimental import utils"
       imports:
         - cuda.core.experimental
+    about:
+      home: https://nvidia.github.io/cuda-python/cuda-core
+      license: Apache-2.0
+      license_file: cuda_core/LICENSE
+      license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_core/LICENSE
+      summary: Pythonic access to CUDA core functionality (experimental)
+      description: |
+        cuda.core offers idiomatic, Pythonic access to CUDA Runtime and other functionalities.
+      doc_url: https://nvidia.github.io/cuda-python/cuda-core
+      dev_url: https://github.com/NVIDIA/cuda-python
 
 about:
   home: https://nvidia.github.io/cuda-python/
   license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
-  license_file: LICENSE
+  license_file: LICENSE.md
+  license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
   summary: CUDA Python
   description: |
     CUDA Python is the home for accessing NVIDIA's CUDA platform from Python.
