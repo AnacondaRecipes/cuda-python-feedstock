@@ -60,7 +60,6 @@ outputs:
       run:
         - python
         - {{ pin_subpackage('cuda-bindings', exact=True) }}
-        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
     test:
       requires:
         - python
@@ -203,7 +202,7 @@ outputs:
         - python
         - pip
         - setuptools
-        - cython
+        - cython >=3.0
         - {{ pin_subpackage('cuda-bindings', exact=True) }}
       run:
         - python
@@ -211,8 +210,6 @@ outputs:
         - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
         - {{ pin_subpackage('cuda-bindings', exact=True) }}
     test:
-      requires:
-        - python
       commands:
         - python -c "from cuda.core.experimental import Device"
         - python -c "from cuda.core.experimental import utils"
