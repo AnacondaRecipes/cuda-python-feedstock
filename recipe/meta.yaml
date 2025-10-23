@@ -5,6 +5,8 @@
 {% set version = "12.8.0" %}
 # cuda-python keeps different versioning scheme for the included modules
 {% set core_version = "0.1.1" %}
+# Set CUDA versions to be used against compilation of cuda-python
+{% set cuda_toolkit_version = "12.8" %}
 
 # Git tag should be in sync with cuda-python version.
 # However, there might be exceptions for the included cuda-python modules.
@@ -15,6 +17,7 @@
 {% set build_bindings = True %}
 {% set build_core = True %}
 
+{% set short_version = version.split('.')[:2] | join('.') %}
 {% set target_name = "x86_64-linux" %}  # [linux64]
 {% set target_name = "sbsa-linux" %}  # [aarch64]
 {% set target_name = "x64" %}  # [win64]
@@ -52,6 +55,12 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
+      # We want to make sure we are building against the correct version of CUDA Toolkit
+      {% if not (environ.get("cuda_compiler_version") | string()) == (short_version) %}
+      skip: true
+      {% else %%}
+      skip: {{ not build_bindings }}
+      {% endif %%}
     requirements:
       host:
         - python
@@ -59,11 +68,14 @@ outputs:
         - setuptools
       run:
         - python
-        - {{ pin_subpackage('cuda-bindings', exact=True) }}
+        # See CUDA minor version compatibility docs
+        #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
+        #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
+        - cuda-version {{ cuda_toolkit_version }}
+        - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
     test:
       requires:
         - python
-        - {{ pin_subpackage('cuda-bindings', exact=True) }}
       imports:
         - cuda.bindings
         - cuda.bindings.driver
@@ -90,7 +102,12 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      skip: {{not build_bindings}}
+      # We want to make sure we are building against the correct version of CUDA Toolkit
+      {% if not (environ.get("cuda_compiler_version") | string()) == (short_version) %}
+      skip: true
+      {% else %%}
+      skip: {{ not build_bindings }}
+      {% endif %%}
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
@@ -103,6 +120,7 @@ outputs:
         # use of dlopen, so it is compatible with other CUDA minor versions.
         - cuda-cudart-dev
         - cuda-nvrtc-dev
+      # Do not include cython-generated source files
       ignore_prefix_files:
         - '**/*.c'
         - '**/*.cpp'
@@ -113,22 +131,22 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
+        - cuda-version {{ cuda_toolkit_version }}
       host:
         - python
         - pip
         - setuptools
-        - cython
-        - pyclibrary 0.3.0
-        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
-        - {{ pin_compatible('cuda-cudart-dev', min_pin='x.x', max_pin='x.x') }}
-        - {{ pin_compatible('cuda-cudart', min_pin='x.x', max_pin='x.x') }}
-        - {{ pin_compatible('cuda-nvrtc-dev', min_pin='x.x', max_pin='x.x') }}
-        - {{ pin_compatible('cuda-nvrtc', min_pin='x.x', max_pin='x.x') }}
-        - {{ pin_compatible('cuda-profiler-api', min_pin='x.x', max_pin='x.x') }}
-      run:
+        - cython >=3.0
+        - pyclibrary
+        - cuda-version {{ cuda_toolkit_version }}
+        - cuda-cudart-dev {{ cuda_toolkit_version }}
+        - cuda-cudart {{ cuda_toolkit_version }}
+        - cuda-nvrtc-dev {{ cuda_toolkit_version }}
+        - cuda-nvrtc {{ cuda_toolkit_version }}
+        - cuda-profiler-api {{ cuda_toolkit_version }}
+      run
         - python
-        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
+        - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
         # cuda-python requires cuda-nvrtc from the same major version. We ignored
         # run-exports of cuda-nvrtc-dev and instead allow a looser pinning here.
         - {{ pin_compatible('cuda-nvrtc', min_pin='x', max_pin='x') }}
@@ -146,14 +164,14 @@ outputs:
       requires:
         - python
         - setuptools
-        - cython
+        - cython >=3.0
         # Required due to 'cythonize' in the test commands
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - cuda-nvrtc-dev
-        - cuda-profiler-api
+        - cuda-nvrtc-dev {{ cuda_toolkit_version }}
+        - cuda-profiler-api {{ cuda_toolkit_version }}
       files:
         - test_cimport.pyx
       commands:
@@ -185,9 +203,16 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      skip: {{not build_core}}
+      # We want to make sure we are building against the correct version of CUDA Toolkit
+      {% if not (environ.get("cuda_compiler_version") | string()) == (short_version) %}
+      skip: true
+      {% else %%}
+      skip: {{ not build_core }}
+      {% endif %%}
       run_exports:
+        # cuda-core releases are versioned as x.y.z
         - {{ pin_subpackage('cuda-core', min_pin='x.x', max_pin='x.x') }}
+      # Do not include cython-generated source files
       ignore_prefix_files:
         - '**/*.c'
         - '**/*.cpp'
@@ -203,12 +228,15 @@ outputs:
         - pip
         - setuptools
         - cython >=3.0
-        - {{ pin_subpackage('cuda-bindings', exact=True) }}
+        # cuda-core is minor version compatible
+        # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
+        - {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
       run:
         - python
         - numpy
-        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
-        - {{ pin_subpackage('cuda-bindings', exact=True) }}
+        # cuda-core is minor version compatible
+        # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
+        - {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
     test:
       commands:
         - python -c "from cuda.core.experimental import Device"
