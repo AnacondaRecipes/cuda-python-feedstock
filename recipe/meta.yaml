@@ -56,7 +56,7 @@ outputs:
     build:
       number: {{ number }}
       # We want to make sure we are building against the correct version of CUDA Toolkit
-      {% if not (environ.get("cuda_compiler_version") | string()) == (short_version) %}
+      {% if not (environ.get("cuda_compiler_version")|string()) == short_version %}
       skip: true
       {% else %}
       skip: {{ not build_bindings }}
@@ -103,7 +103,7 @@ outputs:
     build:
       number: {{ number }}
       # We want to make sure we are building against the correct version of CUDA Toolkit
-      {% if not (environ.get("cuda_compiler_version") | string()) == (short_version) %}
+      {% if not (environ.get("cuda_compiler_version")|string()) == short_version %}
       skip: true
       {% else %}
       skip: {{ not build_bindings }}
@@ -204,7 +204,7 @@ outputs:
     build:
       number: {{ number }}
       # We want to make sure we are building against the correct version of CUDA Toolkit
-      {% if not (environ.get("cuda_compiler_version") | string()) == (short_version) %}
+      {% if not (environ.get("cuda_compiler_version")|string()) == short_version %}
       skip: true
       {% else %}
       skip: {{ not build_core }}
