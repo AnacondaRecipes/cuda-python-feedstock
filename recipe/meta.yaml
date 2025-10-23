@@ -158,8 +158,6 @@ outputs:
         # version with cuda.cudart.getLocalRuntimeVersion(). We ignored run-exports
         # of cuda-cudart-dev and instead allow a looser pinning here.
         - {{ pin_compatible('cuda-cudart', min_pin='x', max_pin='x') }}
-        # cuda-bindings and cuda-python versions should be kept in sync
-        - {{ pin_subpackage('cuda-python', max_pin='x.x') }}
     test:
       requires:
         - python
