@@ -144,7 +144,7 @@ outputs:
         - cuda-nvrtc-dev {{ cuda_toolkit_version }}
         - cuda-nvrtc {{ cuda_toolkit_version }}
         - cuda-profiler-api {{ cuda_toolkit_version }}
-      run
+      run:
         - python
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
         # cuda-python requires cuda-nvrtc from the same major version. We ignored
