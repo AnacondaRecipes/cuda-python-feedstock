@@ -56,11 +56,11 @@ outputs:
     build:
       number: {{ number }}
       # We want to make sure we are building against the correct version of CUDA Toolkit
-      {% if not cuda_compiler_version == short_version %}
-      skip: true
-      {% else %}
+      #{% if not cuda_compiler_version == short_version %}
+      #skip: true
+      #{% else %}
       skip: {{ not build_bindings }}
-      {% endif %}
+      #{% endif %}
     requirements:
       host:
         - python
@@ -103,11 +103,11 @@ outputs:
     build:
       number: {{ number }}
       # We want to make sure we are building against the correct version of CUDA Toolkit
-      {% if not cuda_compiler_version == short_version %}
-      skip: true
-      {% else %}
+      #{% if not cuda_compiler_version == short_version %}
+      #skip: true
+      #{% else %}
       skip: {{ not build_bindings }}
-      {% endif %}
+      #{% endif %}
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
@@ -202,11 +202,11 @@ outputs:
     build:
       number: {{ number }}
       # We want to make sure we are building against the correct version of CUDA Toolkit
-      {% if not cuda_compiler_version == short_version %}
-      skip: true
-      {% else %}
+      #{% if not cuda_compiler_version == short_version %}
+      #skip: true
+      #{% else %}
       skip: {{ not build_core }}
-      {% endif %}
+      #{% endif %}
       run_exports:
         # cuda-core releases are versioned as x.y.z
         - {{ pin_subpackage('cuda-core', min_pin='x.x', max_pin='x.x') }}
