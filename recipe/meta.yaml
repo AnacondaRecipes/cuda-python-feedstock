@@ -40,7 +40,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      {% if not (cuda_compiler_version == short version) %}
+      {% if not (cuda_compiler_version == short_version) %}
       skip: true
       {% endif %}
     requirements:
@@ -87,7 +87,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      {% if not (cuda_compiler_version == short version) %}
+      {% if not (cuda_compiler_version == short_version) %}
       skip: true
       {% endif %}
       script_env:
