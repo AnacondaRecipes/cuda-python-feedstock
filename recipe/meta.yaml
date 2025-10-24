@@ -183,7 +183,7 @@ outputs:
 
   # TODO: remove cuda-core from cuda-python recipe after moving it to its own feedstock: cuda-core-feedstock
   - name: cuda-core
-    version: {{ core_version }}
+    version: {{ version }}
     # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
