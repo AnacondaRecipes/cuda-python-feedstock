@@ -1,7 +1,5 @@
 {% set name = 'cuda-python' %}
 {% set number = 0 %}
-
-# cuda-python version is in sync with cuda-bindings version
 {% set version = '12.8.0' %}
 
 {% set short_version = version.split('.')[:2] | join('.') %}
