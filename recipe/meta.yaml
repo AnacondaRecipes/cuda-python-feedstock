@@ -229,6 +229,7 @@ outputs:
         # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
         # Ref: https://github.com/NVIDIA/cuda-python/blob/v12.8.0/cuda_core/pyproject.toml#L51
         #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
+        - cuda-bindings
       run:
         - python
         - numpy
@@ -238,6 +239,7 @@ outputs:
         # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
         # Ref: https://github.com/NVIDIA/cuda-python/blob/v12.8.0/cuda_core/pyproject.toml#L51
         #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
+        - cuda-bindings
     test:
       commands:
         - python -c "from cuda.core.experimental import Device"
