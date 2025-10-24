@@ -42,7 +42,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      skip: true  # [cuda_compiler_version != short_version]
+      skip: true  # [cuda_compiler_version|string != "{{ short_version }}"]
     requirements:
       host:
         - python
@@ -87,7 +87,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      skip: true  # [cuda_compiler_version != short_version]
+      skip: true  # [cuda_compiler_version|string != "{{ short_version }}"]
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
