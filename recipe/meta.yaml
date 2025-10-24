@@ -7,6 +7,8 @@
 {% set core_version = "0.1.1" %}
 # Set CUDA versions to be used against compilation of cuda-python
 {% set cuda_toolkit_version = "12.8" %}
+# TODO: Force using CUDA 12.8
+{% set cuda_compiler_version = "12.8" %}
 
 # Git tag should be in sync with cuda-python version.
 # However, there might be exceptions for the included cuda-python modules.
