@@ -54,7 +54,7 @@ outputs:
         #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
         #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
         - cuda-version {{ cuda_toolkit_version }}
-        - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
+        - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
     test:
       imports:
         - cuda.bindings
