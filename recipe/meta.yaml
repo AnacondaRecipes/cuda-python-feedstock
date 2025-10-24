@@ -242,8 +242,8 @@ outputs:
         - cuda-bindings
     test:
       commands:
-        - python -c "from cuda.core.experimental import Device"
-        - python -c "from cuda.core.experimental import utils"
+        - python -c "from cuda.core.experimental import Device; print(dir(Device))"
+        - python -c "from cuda.core.experimental import utils; print(dir(utils))"
       imports:
         - cuda.core.experimental
     about:
