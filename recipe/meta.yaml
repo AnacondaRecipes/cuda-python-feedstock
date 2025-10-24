@@ -74,8 +74,6 @@ outputs:
         - cuda-version {{ cuda_toolkit_version }}
         - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
     test:
-      requires:
-        - python
       imports:
         - cuda.bindings
         - cuda.bindings.driver
@@ -160,8 +158,6 @@ outputs:
         - {{ pin_compatible('cuda-cudart', min_pin='x', max_pin='x') }}
     test:
       requires:
-        - python
-        - setuptools
         - cython >=3.0
         # Required due to 'cythonize' in the test commands
         - {{ stdlib('c') }}
