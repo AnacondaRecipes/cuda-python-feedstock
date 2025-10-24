@@ -8,11 +8,6 @@
 # Set CUDA versions to be used against compilation of cuda-python
 {% set cuda_toolkit_version = "12.8" %}
 
-
-# Enable building of the modules included in the upstream repository
-{% set build_bindings = True %}
-{% set build_core = True %}
-
 {% set short_version = version.split('.')[:2] | join('.') %}
 {% set target_name = "x86_64-linux" %}  # [linux64]
 {% set target_name = "sbsa-linux" %}  # [aarch64]
