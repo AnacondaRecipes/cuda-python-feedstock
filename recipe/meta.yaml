@@ -51,12 +51,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      # We want to make sure we are building against the correct version of CUDA Toolkit
-      #{% if not cuda_compiler_version == short_version %}
-      #skip: true
-      #{% else %}
-      skip: {{ not build_bindings }}
-      #{% endif %}
+      skip: true  # [cuda_compiler_version != short_version]
     requirements:
       host:
         - python
@@ -96,12 +91,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      # We want to make sure we are building against the correct version of CUDA Toolkit
-      #{% if not cuda_compiler_version == short_version %}
-      #skip: true
-      #{% else %}
-      skip: {{ not build_bindings }}
-      #{% endif %}
+      skip: true  # [cuda_compiler_version != short_version]
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
@@ -194,15 +184,7 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      # We want to make sure we are building against the correct version of CUDA Toolkit
-      #{% if not cuda_compiler_version == short_version %}
-      #skip: true
-      #{% else %}
-      skip: {{ not build_core }}
-      #{% endif %}
-      run_exports:
-        # cuda-core releases are versioned as x.y.z
-        - {{ pin_subpackage('cuda-core', min_pin='x.x', max_pin='x.x') }}
+      skip: true
       # Do not include cython-generated source files
       ignore_prefix_files:
         - '**/*.c'
