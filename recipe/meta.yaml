@@ -42,8 +42,7 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    #- {{ compiler('cuda') }}
-    - cuda-nvcc {{ cuda_toolkit_version }}
+    - {{ compiler('cuda') }}
   host:
     - python
 
@@ -129,8 +128,7 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        #- {{ compiler('cuda') }}
-        - cuda-nvcc {{ cuda_toolkit_version }}
+        - {{ compiler('cuda') }}
         - cuda-version {{ cuda_toolkit_version }}
       host:
         - python
@@ -165,8 +163,7 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        #- {{ compiler('cuda') }}
-        - cuda-nvcc {{ cuda_toolkit_version }}
+        - {{ compiler('cuda') }}
         - cuda-nvrtc-dev {{ cuda_toolkit_version }}
         - cuda-profiler-api {{ cuda_toolkit_version }}
       files:
@@ -219,8 +216,7 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        #- {{ compiler('cuda') }}
-        - cuda-nvcc {{ cuda_toolkit_version }}
+        - {{ compiler('cuda') }}
       host:
         - python
         - pip

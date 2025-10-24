@@ -1,0 +1,5 @@
+# We might not be always in sync for CUDA versions with aggregate/conda_build_config.yaml
+cuda_compiler:
+  - cuda-nvcc
+cuda_compiler_version:
+  - 12.8
