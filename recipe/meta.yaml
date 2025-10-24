@@ -70,7 +70,7 @@ outputs:
     about:
       home: https://nvidia.github.io/cuda-python/
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
-      license_file: cuda_python/LICENSE
+      license_file: LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_python/LICENSE
       summary: CUDA Python
       description: |
@@ -175,6 +175,7 @@ outputs:
       doc_url: https://nvidia.github.io/cuda-python/cuda-bindings
       dev_url: https://github.com/NVIDIA/cuda-python
 
+  # TODO: remove cuda-core from cuda-python recipe after moving it to its own feedstock: cuda-core-feedstock
   - name: cuda-core
     version: {{ core_version }}
     # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
@@ -227,9 +228,10 @@ outputs:
         - cuda.core.experimental
     about:
       home: https://nvidia.github.io/cuda-python/cuda-core
-      license: Apache-2.0
-      license_file: cuda_core/LICENSE
-      license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_core/LICENSE
+      # Note: Check for cuda-core license, it might be Apache-2.0 in the future releases
+      license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      license_file: LICENSE
+      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
       summary: Pythonic access to CUDA core functionality (experimental)
       description: |
         cuda.core offers idiomatic, Pythonic access to CUDA Runtime and other functionalities.
