@@ -3,10 +3,6 @@
 
 # cuda-python version is in sync with cuda-bindings version
 {% set version = "12.8.0" %}
-# cuda-python keeps different versioning scheme for the included modules
-{% set core_version = "0.1.1" %}
-# Set CUDA versions to be used against compilation of cuda-python
-{% set cuda_toolkit_version = "12.8" %}
 
 {% set short_version = version.split('.')[:2] | join('.') %}
 {% set target_name = "x86_64-linux" %}  # [linux64]
@@ -90,8 +86,6 @@ outputs:
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
-      run_exports:
-        - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
       ignore_run_exports_from:
         - {{ compiler('cuda') }}
         # The run-exports from these dev packages are too tight, so we ignore them.
@@ -110,21 +104,24 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - cuda-version {{ cuda_toolkit_version }}
+        - cuda-version
       host:
         - python
         - pip
         - setuptools
         - cython >=3.0
         - pyclibrary
-        - cuda-version {{ cuda_toolkit_version }}
-        - cuda-cudart-dev {{ cuda_toolkit_version }}
-        - cuda-cudart {{ cuda_toolkit_version }}
-        - cuda-nvrtc-dev {{ cuda_toolkit_version }}
-        - cuda-nvrtc {{ cuda_toolkit_version }}
-        - cuda-profiler-api {{ cuda_toolkit_version }}
+        - cuda-version
+        - cuda-cudart-dev
+        - cuda-cudart
+        - cuda-nvrtc-dev
+        - cuda-nvrtc
+        - cuda-profiler-api
       run:
         - python
+        # See CUDA minor version compatibility docs
+        #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
+        #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
         # cuda-python requires cuda-nvrtc from the same major version. We ignored
         # run-exports of cuda-nvrtc-dev and instead allow a looser pinning here.
@@ -146,8 +143,8 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - cuda-nvrtc-dev {{ cuda_toolkit_version }}
-        - cuda-profiler-api {{ cuda_toolkit_version }}
+        - cuda-nvrtc-dev
+        - cuda-profiler-api
       files:
         - test_cimport.pyx
       commands:
