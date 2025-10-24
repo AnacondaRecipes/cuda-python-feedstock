@@ -37,7 +37,7 @@ source:
 
 build:
   number: {{ number }}
-  skip: true  # [py < 310 or osx]
+  skip: true  # [py <310 or osx]
 
 requirements:
   build:
