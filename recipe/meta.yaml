@@ -15,7 +15,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/NVIDIA/cuda-python/releases/download/v{{ version }}/cuda-python-v{{ version }}.tar.gz
+  url: https://github.com/NVIDIA/{{ name }}/releases/download/v{{ version }}/{{ name }}-v{{ version }}.tar.gz
   sha256: 6cc8db1e65a1f995e289b64f9b9bff4362321d36ecf9b54eb192d0781475fbca
 
 build:
