@@ -159,7 +159,8 @@ outputs:
     test:
       requires:
         - cython >=3.0
-        # Required due to 'cythonize' in the test commands
+        # The following are required due to 'cythonize' in the test commands
+        - setuptools
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
