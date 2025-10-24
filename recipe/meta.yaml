@@ -56,6 +56,8 @@ outputs:
         - cuda-version {{ cuda_toolkit_version }}
         - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
     test:
+      requires:
+        - pip
       imports:
         - cuda.bindings
         - cuda.bindings.driver
@@ -63,6 +65,7 @@ outputs:
         - cuda.bindings.nvrtc
         - cuda.bindings.nvjitlink
       commands:
+        - pip check
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
     about:
       home: https://nvidia.github.io/cuda-python/
@@ -136,6 +139,7 @@ outputs:
         - {{ pin_compatible('cuda-cudart', min_pin='x', max_pin='x') }}
     test:
       requires:
+        - pip
         - cython >=3.0
         # The following are required due to 'cythonize' in the test commands
         - setuptools
@@ -147,16 +151,18 @@ outputs:
         - cuda-profiler-api
       files:
         - test_cimport.pyx
+      imports:
+        - cuda
+        - cuda.cuda
+        - cuda.cudart
       commands:
+        - pip check
         - export C_INCLUDE_PATH="$CONDA_PREFIX/{{ subdir }}/include"  # [linux]
         - set "CL=%CL% /I%CONDA_PREFIX%\{{ subdir }}\include"         # [win]
         - cythonize -i -3 test_cimport.pyx
         - python -c "import test_cimport; test_cimport.test()"
         - python -c "import cuda.bindings; print(cuda.bindings.__version__)"
-      imports:
-        - cuda
-        - cuda.cuda
-        - cuda.cudart
+
     about:
       home: https://nvidia.github.io/cuda-python/cuda-bindings
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
@@ -211,7 +217,10 @@ outputs:
         #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
         - cuda-bindings
     test:
+      requires:
+        - pip
       commands:
+        - pip check
         - python -c "from cuda.core.experimental import Device; print(dir(Device))"
         - python -c "from cuda.core.experimental import utils; print(dir(utils))"
       imports:
