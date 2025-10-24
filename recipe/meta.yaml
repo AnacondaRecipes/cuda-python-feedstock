@@ -7,8 +7,6 @@
 {% set core_version = "0.1.1" %}
 # Set CUDA versions to be used against compilation of cuda-python
 {% set cuda_toolkit_version = "12.8" %}
-# TODO: Force using CUDA 12.8
-{% set cuda_compiler_version = "12.8" %}
 
 # Git tag should be in sync with cuda-python version.
 # However, there might be exceptions for the included cuda-python modules.
@@ -44,7 +42,8 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}
+    #- {{ compiler('cuda') }}
+    - cuda-nvcc {{ cuda_toolkit_version }}
   host:
     - python
 
@@ -130,7 +129,8 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}
+        #- {{ compiler('cuda') }}
+        - cuda-nvcc {{ cuda_toolkit_version }}
         - cuda-version {{ cuda_toolkit_version }}
       host:
         - python
@@ -165,7 +165,8 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}
+        #- {{ compiler('cuda') }}
+        - cuda-nvcc {{ cuda_toolkit_version }}
         - cuda-nvrtc-dev {{ cuda_toolkit_version }}
         - cuda-profiler-api {{ cuda_toolkit_version }}
       files:
@@ -218,7 +219,8 @@ outputs:
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}
+        #- {{ compiler('cuda') }}
+        - cuda-nvcc {{ cuda_toolkit_version }}
       host:
         - python
         - pip
