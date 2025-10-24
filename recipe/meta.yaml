@@ -47,7 +47,7 @@ requirements:
     - python
 
 outputs:
-  # cuda-python is a metapackage
+  # cuda-python is a metapackage as of v12.8
   - name: {{ name }}
     version: {{ version }}
     # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
@@ -223,15 +223,21 @@ outputs:
         - pip
         - setuptools
         - cython >=3.0
-        # cuda-core is minor version compatible
+        # cuda-core is
+        #   * patch version compatible with CUDA 11.8
+        #   * minor version compatible with CUDA 12
         # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
-        - {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
+        # Ref: https://github.com/NVIDIA/cuda-python/blob/v12.8.0/cuda_core/pyproject.toml#L51
+        #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
       run:
         - python
         - numpy
-        # cuda-core is minor version compatible
+        # cuda-core is
+        #   * patch version compatible with CUDA 11.8
+        #   * minor version compatible with CUDA 12
         # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
-        - {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
+        # Ref: https://github.com/NVIDIA/cuda-python/blob/v12.8.0/cuda_core/pyproject.toml#L51
+        #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
     test:
       commands:
         - python -c "from cuda.core.experimental import Device"
