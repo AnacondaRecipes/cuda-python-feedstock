@@ -187,69 +187,6 @@ outputs:
       doc_url: https://nvidia.github.io/cuda-python/cuda-bindings
       dev_url: https://github.com/NVIDIA/cuda-python
 
-  # TODO: remove cuda-core from cuda-python recipe after moving it to its own feedstock: cuda-core-feedstock
-  - name: cuda-core
-    version: {{ version }}
-    # Keep scripts under outputs section to ensure building the modules/packages provided by cuda-python
-    script: build_output.sh   # [linux]
-    script: build_output.bat  # [win]
-    build:
-      number: {{ number }}
-      skip: true
-      # Do not include cython-generated source files
-      ignore_prefix_files:
-        - '**/*.c'
-        - '**/*.cpp'
-        - '**/*.so.c'
-    requirements:
-      build:
-        - {{ stdlib('c') }}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('cuda') }}
-      host:
-        - python
-        - pip
-        - setuptools
-        - cython >=3.0
-        # cuda-core is
-        #   * patch version compatible with CUDA 11.8
-        #   * minor version compatible with CUDA 12
-        # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
-        # Ref: https://github.com/NVIDIA/cuda-python/blob/v12.8.0/cuda_core/pyproject.toml#L51
-        #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
-        - cuda-bindings
-      run:
-        - python
-        - numpy
-        # cuda-core is
-        #   * patch version compatible with CUDA 11.8
-        #   * minor version compatible with CUDA 12
-        # Ref: https://nvidia.github.io/cuda-python/cuda-core/0.1.1/
-        # Ref: https://github.com/NVIDIA/cuda-python/blob/v12.8.0/cuda_core/pyproject.toml#L51
-        #- {{ pin_subpackage('cuda-bindings', min_pin='x', max_pin='x') }}
-        - cuda-bindings
-    test:
-      requires:
-        - pip
-      commands:
-        - pip check
-        - python -c "from cuda.core.experimental import Device; print(dir(Device))"
-        - python -c "from cuda.core.experimental import utils; print(dir(utils))"
-      imports:
-        - cuda.core.experimental
-    about:
-      home: https://nvidia.github.io/cuda-python/cuda-core
-      # Note: Check for cuda-core license, it might be Apache-2.0 in the future releases
-      license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
-      license_file: LICENSE
-      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
-      summary: Pythonic access to CUDA core functionality (experimental)
-      description: |
-        cuda.core offers idiomatic, Pythonic access to CUDA Runtime and other functionalities.
-      doc_url: https://nvidia.github.io/cuda-python/cuda-core
-      dev_url: https://github.com/NVIDIA/cuda-python
-
 about:
   home: https://nvidia.github.io/cuda-python/
   license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
