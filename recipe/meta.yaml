@@ -48,6 +48,8 @@ outputs:
         - python
         - pip
         - setuptools
+      build:
+        - cuda-version
       run:
         - python
         # Keep cuda-python pin compatible with cuda-bindings major.minor version due to upstream repo versioning.
