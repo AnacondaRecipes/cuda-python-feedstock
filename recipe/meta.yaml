@@ -55,8 +55,10 @@ outputs:
         # Therefore, we are a bit strict on cuda-python, but more flexible on cuda-bindings.
         # Upstream keeps the patch versioning internal to the cuda-python updates, i.e. it might or might not follow CUDA Toolkit patch upgrades.
         # See the following document for more details: https://nvidia.github.io/cuda-python/cuda-bindings/12.8.0/support.html
-        - cuda-version
         - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
+        # Keep cuda-python pin compatible with cuda-version major.minor due to upstream repo versioning.
+        # See the following document for more details: https://nvidia.github.io/cuda-python/cuda-bindings/12.8.0/support.html
+        - {{ pin_subpackage('cuda-version', min_pin='x.x', max_pin='x.x') }}
     test:
       requires:
         - pip
