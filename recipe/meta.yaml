@@ -128,7 +128,8 @@ outputs:
         - cuda-profiler-api
       run:
         - python
-        # See CUDA minor version compatibility docs
+        # Keep cuda-bindings pin compatible with cuda-version major only due to CUDA minor version compatibility.
+        # See CUDA minor version compatibility docs:
         #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
         #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
