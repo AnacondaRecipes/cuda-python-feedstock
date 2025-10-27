@@ -58,7 +58,7 @@ outputs:
         - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
         # Keep cuda-python pin compatible with cuda-version major.minor due to upstream repo versioning.
         # See the following document for more details: https://nvidia.github.io/cuda-python/cuda-bindings/12.8.0/support.html
-        - {{ pin_subpackage('cuda-version', min_pin='x.x', max_pin='x.x') }}
+        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
     test:
       requires:
         - pip
