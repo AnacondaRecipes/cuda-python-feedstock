@@ -23,7 +23,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/{{ name }}/releases/download/v{{ version }}/{{ name }}-v{{ version }}.tar.gz
-  sha256: 6cc8db1e65a1f995e289b64f9b9bff4362321d36ecf9b54eb192d0781475fbca
+  sha256: e08eac307f3f17bf163ffc9d1a493bb93c10e94948a4117b7e33d76452ae0b79
 
 build:
   number: {{ number }}
