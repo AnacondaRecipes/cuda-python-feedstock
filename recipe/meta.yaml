@@ -131,7 +131,7 @@ outputs:
         - python
         - pip
         - setuptools
-        - cython >=3.0
+        - cython >=3.1,<3.2
         - pyclibrary
         - cuda-version {{ cuda_major_version }}.*
         - cuda-cudart-dev
@@ -160,7 +160,7 @@ outputs:
     test:
       requires:
         - pip
-        - cython >=3.0
+        - cython >=3.1,<3.2
         # The following are required due to 'cythonize' in the test commands
         - setuptools
         - {{ stdlib('c') }}
