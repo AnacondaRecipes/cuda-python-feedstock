@@ -2,8 +2,13 @@
 {% set number = 0 %}
 {% set version = '12.8.0' %}
 
+# Important note:
+# We don't have CUDA Toolkit 12.9 in conda main channel at this time.
+# Therefore, "cuda_compiler_version == short_version" checks are removed temporarily
+# We could remove them completely after CUDA Toolkit 13 release
+
 {% set short_version = version.split('.')[:2] | join('.') %}
-# {% set cuda_major_version = (cuda_compiler_version|string).split('.')[0] %}
+{% set cuda_major_version = (cuda_compiler_version|string).split('.')[0] %}
 # {% set cuda_minor_version = (cuda_compiler_version|string).split('.')[1] %}
 {% set target_name = 'x86_64-linux' %}  # [linux]
 {% set target_name = 'sbsa-linux' %}  # [aarch64]
@@ -42,28 +47,31 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      {% if not (cuda_compiler_version == short_version) %}
-      skip: true
-      {% endif %}
+      #{% if not (cuda_compiler_version == short_version) %}
+      #skip: true
+      #{% endif %}
     requirements:
       build:
-        - cuda-version {{ short_version }}
+        - cuda-version {{ cuda_major_version }}.*
       host:
         - python
         - pip
         - setuptools
-        - cuda-version {{ short_version }}
+        - cuda-version {{ cuda_major_version }}.*
       run:
         - python
-        # Keep cuda-python pin compatible with cuda-bindings major.minor version due to upstream repo versioning.
-        # CUDA minor version compatibility should allow cuda-bindings v12.y work with any CUDA Toolkit v12.x
-        # Therefore, we are a bit strict on cuda-python, but more flexible on cuda-bindings.
-        # Upstream keeps the patch versioning internal to the cuda-python updates, i.e. it might or might not follow CUDA Toolkit patch upgrades.
-        # See the following document for more details: https://nvidia.github.io/cuda-python/cuda-bindings/12.8.0/support.html
+        # Keep cuda-python pin compatible with cuda-bindings major.minor version.
+        # This is to make sure that installing cuda-python x.y would always install cuda-bindings x.y
+        # CUDA minor version compatibility should allow cuda-bindings v12.y work with any CUDA Toolkit v12.y
+        # Please refer to the following documents for details:
+        #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
+        #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
         - {{ pin_subpackage('cuda-bindings', min_pin='x.x', max_pin='x.x') }}
-        # Keep cuda-python pin compatible with cuda-version major.minor due to upstream repo versioning.
-        # See the following document for more details: https://nvidia.github.io/cuda-python/cuda-bindings/12.8.0/support.html
-        - {{ pin_compatible('cuda-version', min_pin='x.x', max_pin='x.x') }}
+        # Keep cuda-python pin compatible with cuda-version major only.
+        # Please refer to the following documents for details:
+        #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
+        #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
+        - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
     test:
       requires:
         - pip
@@ -94,9 +102,9 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
-      {% if not (cuda_compiler_version == short_version) %}
-      skip: true
-      {% endif %}
+      #{% if not (cuda_compiler_version == short_version) %}
+      #skip: true
+      #{% endif %}
       script_env:
         # Ensure that CUDA includes can be found by the host compiler
         - CUDA_HOME={{ PREFIX ~ subdir ~ os.pathsep ~ BUILD_PREFIX ~ subdir }}
@@ -118,14 +126,14 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
-        - cuda-version {{ short_version }}
+        - cuda-version {{ cuda_major_version }}.*
       host:
         - python
         - pip
         - setuptools
         - cython >=3.0
         - pyclibrary
-        - cuda-version {{ short_version }}
+        - cuda-version {{ cuda_major_version }}.*
         - cuda-cudart-dev
         - cuda-cudart
         - cuda-nvrtc-dev
@@ -133,8 +141,8 @@ outputs:
         - cuda-profiler-api
       run:
         - python
-        # Keep cuda-bindings pin compatible with cuda-version major only due to CUDA minor version compatibility.
-        # See CUDA minor version compatibility docs:
+        # Keep cuda-bindings pin compatible with cuda-version major only.
+        # Please refer to the following documents for details:
         #   * https://nvidia.github.io/cuda-python/cuda-bindings/latest/support.html
         #   * https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
