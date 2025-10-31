@@ -81,6 +81,7 @@ outputs:
         - cuda.bindings.runtime
         - cuda.bindings.nvrtc
         - cuda.bindings.nvjitlink
+        - cuda.bindings.cufile  # [linux]
       commands:
         - pip check
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
@@ -113,8 +114,11 @@ outputs:
         # The run-exports from these dev packages are too tight, so we ignore them.
         # The cuda-python package supports CUDA Enhanced Compatibility through its
         # use of dlopen, so it is compatible with other CUDA minor versions.
+        - cuda-nvcc-impl
         - cuda-cudart-dev
+        - cuda-cudart-static
         - cuda-nvrtc-dev
+        - libcufile-dev  # [linux]
       # Do not include cython-generated source files
       ignore_prefix_files:
         - '**/*.c'
@@ -134,11 +138,16 @@ outputs:
         - cython >=3.1,<3.2
         - pyclibrary
         - cuda-version {{ cuda_major_version }}.*
+        - cuda-crt-dev_{{ target_platform }}
         - cuda-cudart-dev
+        - cuda-cudart-static
         - cuda-cudart
-        - cuda-nvrtc-dev
+        - cuda-nvcc-impl
         - cuda-nvrtc
+        - cuda-nvrtc-dev
         - cuda-profiler-api
+        - libcufile  # [linux]
+        - libcufile-dev  # [linux]
       run:
         - python
         # Keep cuda-bindings pin compatible with cuda-version major only.
@@ -148,9 +157,12 @@ outputs:
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
         # cuda-python requires cuda-nvrtc from the same major version. We ignored
         # run-exports of cuda-nvrtc-dev and instead allow a looser pinning here.
+        # Same for cuda-nvcc-impl.
         - {{ pin_compatible('cuda-nvrtc', min_pin='x', max_pin='x') }}
-        - libnvjitlink >=12.3
-        - pywin32  # [win64]
+        - {{ pin_compatible('cuda-nvcc-impl', min_pin='x', max_pin='x') }}
+        - {{ pin_compatible('libcufile', min_pin='x', max_pin='x') }}  # [linux and cufile_supported]
+        - libnvjitlink >=12.3,<13
+        - numpy  # [linux]
       run_constrained:
         # cuda-cudart is not a hard dependency because cuda-python re-implements
         # cudart. This package is optionally dlopen'd for getting the local cudart
@@ -175,6 +187,13 @@ outputs:
         - cuda
         - cuda.cuda
         - cuda.cudart
+        - cuda.bindings
+        - cuda.bindings.driver
+        - cuda.bindings.runtime
+        - cuda.bindings.cufile  # [linux]
+        - cuda.bindings.nvrtc
+        - cuda.bindings.nvjitlink
+        - cuda.bindings.nvvm
       commands:
         - pip check
         - export C_INCLUDE_PATH="$CONDA_PREFIX/{{ subdir }}/include"  # [linux]
