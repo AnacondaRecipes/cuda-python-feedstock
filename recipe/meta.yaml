@@ -163,6 +163,7 @@ outputs:
         - {{ pin_compatible('libcufile', min_pin='x', max_pin='x') }}  # [linux and cufile_supported]
         - libnvjitlink >=12.3,<13
         - numpy  # [linux]
+        - cuda-pathfinder >=1.1.0,<2
       run_constrained:
         # cuda-cudart is not a hard dependency because cuda-python re-implements
         # cudart. This package is optionally dlopen'd for getting the local cudart
@@ -173,7 +174,7 @@ outputs:
       requires:
         - pip
         - cython >=3.1,<3.2
-        # The following are required due to 'cythonize' in the test commands
+        # The following are required for 'cythonize' in the test commands
         - setuptools
         - {{ stdlib('c') }}
         - {{ compiler('c') }}
