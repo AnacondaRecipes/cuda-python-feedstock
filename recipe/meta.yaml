@@ -1,6 +1,6 @@
 {% set name = 'cuda-python' %}
 {% set number = 0 %}
-{% set version = '12.8.0' %}
+{% set version = '12.9.4' %}
 
 # Important note:
 # We don't have CUDA Toolkit 12.9 in conda main channel at this time.
