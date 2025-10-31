@@ -87,7 +87,7 @@ outputs:
     about:
       home: https://nvidia.github.io/cuda-python
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
-      license_file: LICENSE
+      license_file: cuda_python/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/cuda_python/LICENSE
       summary: CUDA Python
       description: |
