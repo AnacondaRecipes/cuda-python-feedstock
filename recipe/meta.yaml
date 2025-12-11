@@ -1,4 +1,4 @@
-{% set number = 1 %}
+{% set number = 0 %}
 {% set version = "13.0.3" %}
 {% set sha256 = "0e32bf4dd9745c07f5d04c2cc6a8cd382f5ce544a28b26465bd7bc7811b8638d" %}
 
@@ -14,7 +14,7 @@
 {% set subdir = os.sep.join(["", "Library"]) %}               # [win64]
 
 package:
-  name: {{ name }}-split
+  name: cuda-python-split
   version: {{ version }}
 
 source:
@@ -23,16 +23,14 @@ source:
 
 build:
   number: {{ number }}
-  skip: true  # [py <310 or osx]
+  skip: true  # [py<39 or osx]
 
+# Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ compiler('cuda') }}
   host:
     - python
 
@@ -43,19 +41,14 @@ outputs:
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
-      noarch: python
       number: {{ number }}
-      skip: true  # [not linux64]
     requirements:
-      build:
-        - cuda-version {{ short_version }}
       host:
         - python
         - pip
         - setuptools
-        - cuda-version {{ short_version }}
       run:
-        - python >={{ python_min }}
+        - python
         - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
         - cuda-version >=13.0,<14.0a0
     test:
@@ -73,14 +66,14 @@ outputs:
         - pip check
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
     about:
-      home: https://nvidia.github.io/cuda-python
+      home: https://nvidia.github.io/cuda-python/
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
       license_file: cuda_python/LICENSE
-      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
+      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
       summary: CUDA Python
       description: |
-        CUDA Python is the home for accessing NVIDIA's CUDA platform from Python
-      doc_url: https://nvidia.github.io/cuda-python
+        CUDA Python is the home for accessing NVIDIA’s CUDA platform from Python.
+      doc_url: https://nvidia.github.io/cuda-python/
       dev_url: https://github.com/NVIDIA/cuda-python
 
   - name: cuda-bindings
@@ -104,7 +97,6 @@ outputs:
         - libcufile-dev  # [linux]
     requirements:
       build:
-        - {{ stdlib('c') }}
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
@@ -147,6 +139,7 @@ outputs:
         # version with cuda.cudart.getLocalRuntimeVersion(). We ignored run-exports
         # of cuda-cudart-dev and instead allow a looser pinning here.
         - {{ pin_compatible('cuda-cudart', min_pin='x', max_pin='x') }}
+        - {{ pin_subpackage('cuda-python', max_pin='x.x') }}
     test:
       requires:
         - {{ compiler('c') }}
@@ -158,15 +151,11 @@ outputs:
         - pip
       files:
         - test_cimport.pyx
-      imports:
-        - cuda
-        - cuda.cuda
-        - cuda.cudart
       commands:
         - pip check
         - export C_INCLUDE_PATH="$CONDA_PREFIX/{{ subdir }}/include"  # [linux]
         - set "CL=%CL% /I%CONDA_PREFIX%\{{ subdir }}\include"         # [win]
-        # workaround for https://github.com/conda-forge/setuptools-feedstock/issues/399 
+        # workaround for https://github.com/conda-forge/setuptools-feedstock/issues/399
         - pip install setuptools
         - cythonize -i -3 -Xfreethreading_compatible=True *.pyx
         - python -c "import test_cimport; test_cimport.test()"
@@ -184,26 +173,28 @@ outputs:
       home: https://nvidia.github.io/cuda-python/cuda-bindings
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
       license_file: cuda_bindings/LICENSE
-      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
+      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
       summary: CUDA Python Low-level Bindings
       description: |
-        cuda.bindings is a standard set of low-level interfaces,
+        CUDA Python provides a standard set of low-level interfaces,
         providing full coverage of and access to the CUDA host APIs from Python.
       doc_url: https://nvidia.github.io/cuda-python/cuda-bindings
       dev_url: https://github.com/NVIDIA/cuda-python
 
 about:
-  home: https://nvidia.github.io/cuda-python
+  home: https://nvidia.github.io/cuda-python/
   license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
   license_file: LICENSE.md
-  license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
+  license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
   summary: CUDA Python
   description: |
     CUDA Python is the home for accessing NVIDIA's CUDA platform from Python.
-  doc_url: https://nvidia.github.io/cuda-python
+  doc_url: https://nvidia.github.io/cuda-python/
   dev_url: https://github.com/NVIDIA/cuda-python
 
 extra:
+  skip-lints:
+    - license_file_overspecified
   feedstock-name: cuda-python
   recipe-maintainers:
     - rwgk
