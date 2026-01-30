@@ -1,6 +1,6 @@
 {% set number = 0 %}
-{% set version = "13.0.3" %}
-{% set sha256 = "0e32bf4dd9745c07f5d04c2cc6a8cd382f5ce544a28b26465bd7bc7811b8638d" %}
+{% set version = "13.1.1" %}
+{% set sha256 = "02ff771ceb900411a8e64ae54f22bfa940ab886f69003440e5f0dfa9338aa1b8" %}
 
 {% set is_freethreading = environ.get("is_freethreading", False) %}
 {% set bindings_major_version = version.split(".")[0]|int %}
@@ -38,7 +38,7 @@ outputs:
 
   - name: cuda-python
     version: {{ version }}
-    script: build_output.sh   # [linux]
+    script: build_output.sh  # [linux]
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
@@ -54,6 +54,7 @@ outputs:
     test:
       requires:
         - pip
+        - numpy
       imports:
         - cuda.bindings
         - cuda.bindings.driver
@@ -62,6 +63,7 @@ outputs:
         - cuda.bindings.nvrtc
         - cuda.bindings.nvjitlink
         - cuda.bindings.nvvm
+        - cuda.bindings._nvml
       commands:
         - pip check
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
@@ -78,7 +80,7 @@ outputs:
 
   - name: cuda-bindings
     version: {{ version }}
-    script: build_output.sh   # [linux]
+    script: build_output.sh  # [linux]
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
@@ -132,7 +134,6 @@ outputs:
         - {{ pin_compatible('cuda-nvvm-impl', min_pin='x', max_pin='x') }}
         - {{ pin_compatible('libcufile', min_pin='x', max_pin='x') }}  # [linux]
         - libnvjitlink >=13.0,<14.0a0
-        - numpy  # [linux]
       run_constrained:
         # cuda-cudart is not a hard dependency because cuda-python statically links to
         # cudart. This package is optionally dlopen'd for getting the local cudart
@@ -149,6 +150,7 @@ outputs:
         - cuda-profiler-api
         - cython
         - pip
+        - numpy
       files:
         - test_cimport.pyx
       commands:
@@ -169,6 +171,7 @@ outputs:
         - cuda.bindings.nvrtc
         - cuda.bindings.nvjitlink
         - cuda.bindings.nvvm
+        - cuda.bindings._nvml
     about:
       home: https://nvidia.github.io/cuda-python/cuda-bindings
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
