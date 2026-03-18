@@ -1,5 +1,10 @@
 # libcufile only exists on ARM for CUDA 12.2+. We split into two ARM packages
 # with/without libcufile support.
+#
+# Anaconda main channel has CUDA 12.4+, so removing the 'False' option on `linux-aarch64`
+# where cufile is not supported
 cufile_supported:
   - True
-  - False  # [aarch64]
+
+libcufile:
+  - '1.14.1.1'

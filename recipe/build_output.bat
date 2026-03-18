@@ -10,4 +10,8 @@ if "%DIR_NAME%"=="cuda_bindings" (
   rem so only the generic SETUPTOOLS_SCM_PRETEND_VERSION is honored.
   set SETUPTOOLS_SCM_PRETEND_VERSION=%PKG_VERSION%
 )
-%PYTHON% -m pip install . --no-deps -vv
+%PYTHON% -m pip install . -vv --no-deps --no-build-isolation
+
+:: Clean up Cython temporary files from site-packages directory
+del /s /q %SP_DIR%\*.c
+del /s /q %SP_DIR%\*.cpp
