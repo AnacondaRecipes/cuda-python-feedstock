@@ -23,7 +23,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py < 39 or ppc64le or osx]
+  skip: true  # [py <39 or osx]
 
 # Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:
@@ -41,24 +41,22 @@ outputs:
     script: build_output.sh   # [linux]
     script: build_output.bat  # [win]
     build:
-      noarch: python
       number: {{ number }}
-      skip: true  # [not linux64]
     requirements:
       host:
-        - python {{ python_min }}.*
+        - python
         - pip
         - setuptools
         - setuptools-scm >=8
       run:
-        - python >={{ python_min }}
+        - python
         - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
         - cuda-version >=12.0,<13.0a0  # [not aarch64]
         - cuda-version >=12.0,<12.2a0  # [aarch64 and not cufile_supported]
         - cuda-version >=12.2,<13.0a0  # [aarch64 and cufile_supported]
     test:
       requires:
-        - python >={{ python_min }}
+        - python
         - numpy
       imports:
         - cuda.bindings
@@ -77,6 +75,7 @@ outputs:
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
       license_file: cuda_python/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
+      license_family: Other
       summary: CUDA Python
       description: |
         CUDA Python is the home for accessing NVIDIA’s CUDA platform from Python.
@@ -112,19 +111,19 @@ outputs:
       host:
         # cuda.bindings needs to be built with the matching major.minor headers
         - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
-        - cuda-crt-dev_{{ target_platform }}
-        - cuda-cudart-dev
-        - cuda-cudart-static
-        - cuda-cudart
-        - cuda-nvcc-impl
-        - cuda-nvrtc
-        - cuda-nvrtc-dev
-        - cuda-profiler-api
-        - libcufile      # [linux and cufile_supported]
-        - libcufile-dev  # [linux]
-        - cython
+        - cuda-crt-dev_{{ target_platform }} ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-cudart-dev ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-cudart-static ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-cudart ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-nvcc-impl ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-nvrtc ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-nvrtc-dev ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-profiler-api ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - libcufile =={{ libcufile }}       # [linux and cufile_supported]
+        - libcufile-dev =={{ libcufile }}   # [linux]
+        - cython >=3.2,<3.3
         - pip
-        - pyclibrary
+        - pyclibrary >=0.1.7
         - python
         - setuptools
         - setuptools-scm >=8
@@ -150,9 +149,9 @@ outputs:
         - {{ pin_subpackage('cuda-python', max_pin='x.x') }}
     test:
       requires:
-        - cuda-nvcc
-        - cuda-nvrtc-dev
-        - cuda-profiler-api
+        - cuda-nvcc ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-nvrtc-dev ={{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-profiler-api ={{ bindings_major_version }}.{{ bindings_minor_version }}
         - cython
         - pip
         - numpy
@@ -161,7 +160,7 @@ outputs:
       commands:
         - export C_INCLUDE_PATH="$CONDA_PREFIX/{{ subdir }}/include"  # [linux]
         - set "CL=%CL% /I%CONDA_PREFIX%\{{ subdir }}\include"         # [win]
-        # workaround for https://github.com/conda-forge/setuptools-feedstock/issues/399 
+        # workaround for https://github.com/conda-forge/setuptools-feedstock/issues/399
         - pip install setuptools
         - cythonize -i -3 -Xfreethreading_compatible=True *.pyx
         - python -c "import test_cimport; test_cimport.test()"
@@ -184,6 +183,7 @@ outputs:
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
       license_file: cuda_bindings/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
+      license_family: Other
       summary: CUDA Python Low-level Bindings
       description: |
         CUDA Python provides a standard set of low-level interfaces,
@@ -196,6 +196,7 @@ about:
   license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
   license_file: LICENSE.md
   license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
+  license_family: Other
   summary: CUDA Python
   description: |
     CUDA Python is the home for accessing NVIDIA's CUDA platform from Python.
