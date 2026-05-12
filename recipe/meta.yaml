@@ -46,7 +46,7 @@ outputs:
       host:
         - python
         - pip
-        - setuptools
+        - setuptools >=80.0.0
         - setuptools-scm >=8
       run:
         - python
@@ -74,6 +74,7 @@ outputs:
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
       license_file: cuda_python/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
+      license_family: Other
       summary: CUDA Python
       description: |
         CUDA Python is the home for accessing NVIDIA’s CUDA platform from Python.
@@ -104,9 +105,6 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-        - python                              # [build_platform != target_platform]
-        - cython                              # [build_platform != target_platform]
       host:
         # cuda.bindings needs to be built with the matching major.minor headers
         - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
@@ -120,11 +118,11 @@ outputs:
         - cuda-profiler-api
         - libcufile      # [linux]
         - libcufile-dev  # [linux]
-        - cython
+        - cython >=3.2,<3.3
         - pip
-        - pyclibrary
+        - pyclibrary >=0.1.7
         - python
-        - setuptools
+        - setuptools >=80.0.0
         - setuptools-scm >=8
       run:
         - python
@@ -154,14 +152,16 @@ outputs:
         - cython
         - pip
         - numpy
+        # 'cythonize' command (from 'cython' package) requires 'distutils'
+        # Python 3.14 tests fail with error: "ModuleNotFoundError: No module named 'distutils'"
+        # See: https://github.com/conda-forge/setuptools-feedstock/issues/399
+        - setuptools
       files:
         - test_cimport.pyx
       commands:
         - pip check
         - export C_INCLUDE_PATH="$CONDA_PREFIX/{{ subdir }}/include"  # [linux]
         - set "CL=%CL% /I%CONDA_PREFIX%\{{ subdir }}\include"         # [win]
-        # workaround for https://github.com/conda-forge/setuptools-feedstock/issues/399
-        - pip install setuptools
         - cythonize -i -3 -Xfreethreading_compatible=True *.pyx
         - python -c "import test_cimport; test_cimport.test()"
         - python -c "import cuda.bindings; print(cuda.bindings.__version__)"
@@ -181,6 +181,7 @@ outputs:
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
       license_file: cuda_bindings/LICENSE
       license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
+      license_family: Other
       summary: CUDA Python Low-level Bindings
       description: |
         CUDA Python provides a standard set of low-level interfaces,
@@ -193,6 +194,7 @@ about:
   license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
   license_file: LICENSE.md
   license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE.md
+  license_family: Other
   summary: CUDA Python
   description: |
     CUDA Python is the home for accessing NVIDIA's CUDA platform from Python.
@@ -201,7 +203,7 @@ about:
 
 extra:
   skip-lints:
-    - license_file_overspecified
+    - deprecate_license_url
   feedstock-name: cuda-python
   recipe-maintainers:
     - rwgk
