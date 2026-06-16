@@ -1,8 +1,7 @@
 {% set number = 0 %}
-{% set version = "13.2.0" %}
-{% set sha256 = "6899b7684ccaf3249d521cc092768baeae390780375bb115bcd80350b65b1dff" %}
+{% set version = "13.3.1" %}
+{% set sha256 = "5d21c94fb373c9dc5c71f922a4356bb0e292b85c1a3c04930a37834f5201a00d" %}
 
-{% set is_freethreading = environ.get("is_freethreading", False) %}
 {% set bindings_major_version = version.split(".")[0]|int %}
 {% set bindings_minor_version = version.split(".")[1]|int %}
 {% set bindings_patch_version = version.split(".")[2]|int %}
@@ -51,6 +50,8 @@ outputs:
       run:
         - python
         - {{ pin_subpackage('cuda-bindings', max_pin='x.x') }}
+        - cuda-core >=1.0.0,<2.0.0
+        - cuda-pathfinder >=1.1,<2.0
         - cuda-version >=13.0,<14.0a0
     test:
       requires:
@@ -58,14 +59,15 @@ outputs:
         - numpy
       imports:
         - cuda.bindings
-        - cuda.bindings.driver
-        - cuda.bindings.runtime
+        - cuda.bindings.cudla  # [linux and aarch64]
         - cuda.bindings.cufile  # [linux]
-        - cuda.bindings.nvrtc
-        - cuda.bindings.nvjitlink
-        - cuda.bindings.nvvm
-        - cuda.bindings.nvml
+        - cuda.bindings.driver
         - cuda.bindings.nvfatbin
+        - cuda.bindings.nvjitlink
+        - cuda.bindings.nvml
+        - cuda.bindings.nvrtc
+        - cuda.bindings.nvvm
+        - cuda.bindings.runtime
       commands:
         - pip check
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
@@ -116,6 +118,7 @@ outputs:
         - cuda-nvrtc
         - cuda-nvrtc-dev
         - cuda-profiler-api
+        - cuda-pathfinder >=1.5.5,<2
         - libcufile      # [linux]
         - libcufile-dev  # [linux]
         - cython >=3.2,<3.3
@@ -126,7 +129,7 @@ outputs:
         - setuptools-scm >=8
       run:
         - python
-        - cuda-pathfinder >=1.1.0,<2
+        - cuda-pathfinder >=1.5.5,<2
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}
         # cuda-python requires cuda-nvrtc from the same major version. We ignored
         # run-exports of cuda-nvrtc-dev and instead allow a looser pinning here.
@@ -136,12 +139,15 @@ outputs:
         - {{ pin_compatible('libcufile', min_pin='x', max_pin='x') }}  # [linux]
         - libnvjitlink >=13.0,<14.0a0
         - libnvfatbin >=13.0,<14.0a0
+        - libcudla >=13.0,<14.0a0  # [linux and aarch64]
       run_constrained:
         # cuda-cudart is not a hard dependency because cuda-python statically links to
         # cudart. This package is optionally dlopen'd for getting the local cudart
         # version with cuda.cudart.getLocalRuntimeVersion(). We ignored run-exports
         # of cuda-cudart-dev and instead allow a looser pinning here.
         - {{ pin_compatible('cuda-cudart', min_pin='x', max_pin='x') }}
+        # if cuda-python (meta-package) is present in the environment,
+        # it should be version-compatible.
         - {{ pin_subpackage('cuda-python', max_pin='x.x') }}
     test:
       requires:
@@ -169,14 +175,15 @@ outputs:
       imports:
         - cuda
         - cuda.bindings
-        - cuda.bindings.driver
-        - cuda.bindings.runtime
+        - cuda.bindings.cudla  # [linux and aarch64]
         - cuda.bindings.cufile  # [linux]
-        - cuda.bindings.nvrtc
-        - cuda.bindings.nvjitlink
-        - cuda.bindings.nvvm
-        - cuda.bindings.nvml
+        - cuda.bindings.driver
         - cuda.bindings.nvfatbin
+        - cuda.bindings.nvjitlink
+        - cuda.bindings.nvml
+        - cuda.bindings.nvrtc
+        - cuda.bindings.nvvm
+        - cuda.bindings.runtime
     about:
       home: https://nvidia.github.io/cuda-python/cuda-bindings
       license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
