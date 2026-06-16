@@ -41,6 +41,9 @@ outputs:
     script: build_output.bat  # [win]
     build:
       number: {{ number }}
+      script_env:
+        - SUBDIR={{ subdir }}
+        - TARGET_NAME={{ target_name }}
     requirements:
       host:
         - python
@@ -90,9 +93,9 @@ outputs:
     build:
       number: {{ number }}
       script_env:
-        # Ensure that CUDA includes can be found by the host compiler
-        - CUDA_HOME={{ PREFIX ~ subdir }}
-        - LIB={{ PREFIX ~ subdir }}\lib\{{ target_name }};%LIB%  # [win64]
+      script_env:
+        - SUBDIR={{ subdir }}
+        - TARGET_NAME={{ target_name }}
       ignore_run_exports_from:
         # The run-exports from these dev packages are too tight, so we ignore them.
         # The cuda-python package supports CUDA Enhanced Compatibility through its
