@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Build subpackage
+export CUDA_HOME="${PREFIX}/${SUBDIR}"
+
 DIR_NAME="$(echo $PKG_NAME | tr '-' '_')"
 cd $DIR_NAME
 if [[ ${DIR_NAME} == "cuda_python" ]]; then
