@@ -1,7 +1,6 @@
 {% set number = 0 %}
-{% set version = "13.3.1" %}
-{% set sha256 = "5d21c94fb373c9dc5c71f922a4356bb0e292b85c1a3c04930a37834f5201a00d" %}
-
+{% set version = "13.4.1" %}
+{% set sha256 = "0c7bc472dcffc0eedc2973302d9919ce336487ad8078c175c2db115c6330e2fd" %}
 {% set bindings_major_version = version.split(".")[0]|int %}
 {% set bindings_minor_version = version.split(".")[1]|int %}
 {% set bindings_patch_version = version.split(".")[2]|int %}
@@ -9,9 +8,10 @@
 {% set target_name = "sbsa-linux" %}  # [aarch64]
 {% set target_name = "x64" %}  # [win64]
 {% set subdir = "" %}
-{% set subdir = os.sep.join(["", "targets", target_name]) %}  # [linux64 or aarch64]
-{% set subdir = os.sep.join(["", "Library"]) %}               # [win64]
+{% set subdir = 'os.sep.join(["", "targets", target_name])' %}  # [linux64 or aarch64]
+{% set subdir = 'os.sep.join(["", "Library"])' %}  # [win64]
 
+# Have certain top-level requirements so conda-smithy can render the correct variants
 package:
   name: cuda-python-split
   version: {{ version }}
@@ -21,10 +21,9 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: {{ number }}
+  number: 0
   skip: true  # [py<310 or osx]
 
-# Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:
   build:
     - {{ compiler('c') }}
@@ -34,7 +33,6 @@ requirements:
     - python
 
 outputs:
-
   - name: cuda-python
     version: {{ version }}
     script: build_output.sh  # [linux]
@@ -85,7 +83,6 @@ outputs:
         CUDA Python is the home for accessing NVIDIA’s CUDA platform from Python.
       doc_url: https://nvidia.github.io/cuda-python/
       dev_url: https://github.com/NVIDIA/cuda-python
-
   - name: cuda-bindings
     version: {{ version }}
     script: build_output.sh  # [linux]
@@ -122,7 +119,7 @@ outputs:
         - cuda-nvrtc-dev
         - cuda-profiler-api
         - cuda-pathfinder >=1.5.5,<2
-        - libcufile      # [linux]
+        - libcufile  # [linux]
         - libcufile-dev  # [linux]
         - cython >=3.2,<3.3
         - pip
@@ -171,7 +168,7 @@ outputs:
       commands:
         - pip check
         - export C_INCLUDE_PATH="$CONDA_PREFIX/{{ subdir }}/include"  # [linux]
-        - set "CL=%CL% /I%CONDA_PREFIX%\{{ subdir }}\include"         # [win]
+        - set "CL=%CL% /I%CONDA_PREFIX%\{{ subdir }}\include"  # [win]
         - cythonize -i -3 -Xfreethreading_compatible=True *.pyx
         - python -c "import test_cimport; test_cimport.test()"
         - python -c "import cuda.bindings; print(cuda.bindings.__version__)"
