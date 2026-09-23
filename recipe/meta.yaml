@@ -96,7 +96,6 @@ outputs:
     build:
       number: {{ number }}
       script_env:
-      script_env:
         - SUBDIR={{ subdir }}
         - TARGET_NAME={{ target_name }}
       ignore_run_exports_from:
