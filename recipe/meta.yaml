@@ -1,8 +1,7 @@
 {% set number = 0 %}
-{% set version = "12.9.7" %}
-{% set sha256 = "9df6ff7121e11b158730ef39350c111728c9d1a2450124f463f7f4026c89d42f" %}
+{% set version = "12.9.9" %}
+{% set sha256 = "1ef9eb47ec1106c8c618f960ccefa9f547faa401b13ee65547e97f9b74c06233" %}
 
-{% set is_freethreading = environ.get("is_freethreading", False) %}
 {% set bindings_major_version = version.split(".")[0]|int %}
 {% set bindings_minor_version = version.split(".")[1]|int %}
 {% set bindings_patch_version = version.split(".")[2]|int %}
@@ -46,7 +45,7 @@ outputs:
       host:
         - python
         - pip
-        - setuptools
+        - setuptools >=80.0.0
         - setuptools-scm >=8
       run:
         - python
@@ -105,12 +104,9 @@ outputs:
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
         - {{ stdlib('c') }}
-        - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-        - python                              # [build_platform != target_platform]
-        - cython                              # [build_platform != target_platform]
       host:
         # cuda.bindings needs to be built with the matching major.minor headers
-        - cuda-version {{ bindings_major_version }}.{{ bindings_minor_version }}
+        - cuda-version =={{ bindings_major_version }}.{{ bindings_minor_version }}
         - cuda-crt-dev_{{ target_platform }} ={{ bindings_major_version }}.{{ bindings_minor_version }}
         - cuda-cudart-dev ={{ bindings_major_version }}.{{ bindings_minor_version }}
         - cuda-cudart-static ={{ bindings_major_version }}.{{ bindings_minor_version }}
@@ -125,11 +121,11 @@ outputs:
         - pip
         - pyclibrary >=0.1.7
         - python
-        - setuptools
+        - setuptools >=80.0.0
         - setuptools-scm >=8
       run:
         - python
-        - cuda-pathfinder >=1.5.5,<2
+        - cuda-pathfinder >=1.1,<2.0a0
         - {{ pin_compatible('cuda-version', min_pin='x', max_pin='x') }}  # [not aarch64]
         - cuda-version >=12.0,<12.2a0  # [aarch64 and not cufile_supported]
         - cuda-version >=12.2,<13.0a0  # [aarch64 and cufile_supported]
@@ -152,7 +148,7 @@ outputs:
         - cuda-nvcc ={{ bindings_major_version }}.{{ bindings_minor_version }}
         - cuda-nvrtc-dev ={{ bindings_major_version }}.{{ bindings_minor_version }}
         - cuda-profiler-api ={{ bindings_major_version }}.{{ bindings_minor_version }}
-        - cython
+        - cython >=3.2,<3.3
         - pip
         - numpy
       files:
@@ -204,6 +200,8 @@ about:
   dev_url: https://github.com/NVIDIA/cuda-python
 
 extra:
+  skip-lints:
+    - deprecate_license_url
   feedstock-name: cuda-python
   recipe-maintainers:
     - cpcloud
