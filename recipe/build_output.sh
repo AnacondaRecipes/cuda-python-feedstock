@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Build subpackage
 export CUDA_HOME="${PREFIX}/${SUBDIR}"
