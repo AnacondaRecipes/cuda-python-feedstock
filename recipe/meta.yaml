@@ -1,4 +1,4 @@
-{% set number = 0 %}
+{% set number = 1 %}
 {% set version = "12.9.9" %}
 {% set sha256 = "1ef9eb47ec1106c8c618f960ccefa9f547faa401b13ee65547e97f9b74c06233" %}
 
@@ -70,15 +70,15 @@ outputs:
       commands:
         - python -c "import importlib.metadata; importlib.metadata.version('cuda-python')"
     about:
-      home: https://nvidia.github.io/cuda-python/
-      license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      home: https://nvidia.github.io/cuda-python
+      license: Apache-2.0
       license_file: cuda_python/LICENSE
-      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
-      license_family: Other
+      license_url: https://github.com/NVIDIA/cuda-python/blob/v{{ version }}/cuda_python/LICENSE
+      license_family: Apache
       summary: CUDA Python
       description: |
         CUDA Python is the home for accessing NVIDIA’s CUDA platform from Python.
-      doc_url: https://nvidia.github.io/cuda-python/
+      doc_url: https://nvidia.github.io/cuda-python
       dev_url: https://github.com/NVIDIA/cuda-python
 
   - name: cuda-bindings
@@ -176,10 +176,10 @@ outputs:
         - cuda.bindings.nvfatbin
     about:
       home: https://nvidia.github.io/cuda-python/cuda-bindings
-      license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
+      license: Apache-2.0
       license_file: cuda_bindings/LICENSE
-      license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
-      license_family: Other
+      license_url: https://github.com/NVIDIA/cuda-python/blob/v{{ version }}/cuda_bindings/LICENSE
+      license_family: Apache
       summary: CUDA Python Low-level Bindings
       description: |
         CUDA Python provides a standard set of low-level interfaces,
@@ -188,15 +188,15 @@ outputs:
       dev_url: https://github.com/NVIDIA/cuda-python
 
 about:
-  home: https://nvidia.github.io/cuda-python/
-  license: LicenseRef-NVIDIA-SOFTWARE-LICENSE
-  license_file: LICENSE.md
-  license_url: https://github.com/NVIDIA/cuda-python/blob/main/LICENSE
-  license_family: Other
+  home: https://nvidia.github.io/cuda-python
+  license: Apache-2.0
+  license_file: LICENSE
+  license_url: https://github.com/NVIDIA/cuda-python/blob/v{{ version }}/LICENSE
+  license_family: Apache
   summary: CUDA Python
   description: |
     CUDA Python is the home for accessing NVIDIA's CUDA platform from Python.
-  doc_url: https://nvidia.github.io/cuda-python/
+  doc_url: https://nvidia.github.io/cuda-python
   dev_url: https://github.com/NVIDIA/cuda-python
 
 extra:
