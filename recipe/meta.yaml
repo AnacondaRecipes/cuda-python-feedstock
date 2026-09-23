@@ -1,4 +1,4 @@
-{% set number = 0 %}
+{% set number = 1 %}
 {% set version = "13.4.3" %}
 {% set sha256 = "a5d776ed2d81ebf43b1b5d8c00d0e75644779e84c1d13b551cf1af98a049a73a" %}
 
@@ -45,8 +45,6 @@ outputs:
       script_env:
         - SUBDIR={{ subdir }}
         - TARGET_NAME={{ target_name }}
-      # FIXME: temporarily skip for win-arm64, because cuda-core depends on cuda-bindings
-      skip: true  # [win and arm64]
     requirements:
       host:
         - python
