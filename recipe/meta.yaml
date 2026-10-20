@@ -1,6 +1,6 @@
-{% set number = 1 %}
-{% set version = "13.4.3" %}
-{% set sha256 = "a5d776ed2d81ebf43b1b5d8c00d0e75644779e84c1d13b551cf1af98a049a73a" %}
+{% set number = 0 %}
+{% set version = "13.4.4" %}
+{% set sha256 = "d8820a3377ee3a4508c41bf0914a513e3d77b67bc72582d2c1dc6ebc63bcb545" %}
 
 {% set bindings_major_version = version.split(".")[0]|int %}
 {% set bindings_minor_version = version.split(".")[1]|int %}
